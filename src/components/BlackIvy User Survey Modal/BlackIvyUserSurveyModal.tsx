@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import * as Dialog from "@radix-ui/react-dialog"; // Importing Radix UI Dialog for modal functionality
 import { Button } from '../ui/Button/button';
 import { Card } from '../ui/card/card';
-import { CardContent } from '../ui/card/cardContent';
+import { CardContent } from '../ui/card/cardcontent';
 
 interface Option {
     label: string;
