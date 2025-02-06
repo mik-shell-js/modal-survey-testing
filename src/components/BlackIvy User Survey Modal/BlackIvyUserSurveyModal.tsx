@@ -1,22 +1,6 @@
-// app/components/BlackIvy User Survey Modal/BlackIvyUserSurveyModal.tsx
-
-import React, { useState, useRef } from 'react';
-import * as Dialog from "@radix-ui/react-dialog"; // Importing Radix UI Dialog for modal functionality
-import { Button } from '../ui/Button/button';
-import { Card } from '../ui/card/card';
-import { CardContent } from '../ui/card/cardcontent';
-
-interface Option {
-    label: string;
-    emoji: string;
-    description?: string;
-}
-
-interface SurveyPage {
-    question: string;
-    options: Option[];
-    isMultiSelect?: boolean;
-}
+import React, { useState, useRef } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { Button } from "../ui/Button/button";
 
 interface BlackIvyUserSurveyModalProps {
     open: boolean;
@@ -25,346 +9,279 @@ interface BlackIvyUserSurveyModalProps {
 
 const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open, onOpenChange }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedOptions, setSelectedOptions] = useState<Record<number, Record<string, boolean>>>({});
-    const [statusSelection, setStatusSelection] = useState<string | null>(null);
-    const modalContentRef = useRef<HTMLDivElement>(null);
-    const [customInput, setCustomInput] = useState<string>("");
+    const [gender, setGender] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState({ day: "", month: "", year: "" });
+    const [location, setLocation] = useState("");
+    const [employer, setEmployer] = useState("");
+    const [undergradSchool, setUndergradSchool] = useState("");
+    const [classYear, setClassYear] = useState("");
+    const [graduateSchool, setGraduateSchool] = useState("");
+    const [degreeType, setDegreeType] = useState("");
+    const [hobbies, setHobbies] = useState<string[]>([]);
+    const maxHobbies = 5;
+    const pages = [1, 2, 3, 4, 5]; // Array to represent the total number of pages
 
-    const basePages: SurveyPage[] = [
-        {
-            question: "What best describes your current professional status?",
-            options: [
-                {
-                    label: "University Affiliate",
-                    description: "You are currently a student or pursuing academic research.",
-                    emoji: "🎓",
-                },
-                {
-                    label: "Industry Professional",
-                    description: "You are currently working in industry.",
-                    emoji: "💼",
-                },
-            ],
-        },
-    ];
-
-    const industryPage: SurveyPage = {
-        question: "Choose your Industry!",
-        options: [
-            { label: "Aerospace and Defense", emoji: "✈️" },
-            { label: "Agriculture and Farming", emoji: "🌾" },
-            { label: "Arts and Design", emoji: "🎨" },
-            { label: "Automotive", emoji: "🚗" },
-            { label: "Consulting", emoji: "💼" },
-            { label: "Education", emoji: "📚" },
-            { label: "Energy and Utilities", emoji: "⚡" },
-            { label: "Entertainment and Media", emoji: "🎭" },
-            { label: "Environmental Services", emoji: "🌍" },
-            { label: "Fashion and Apparel", emoji: "👗" },
-            { label: "Finance and Banking", emoji: "🏦" },
-            { label: "Government and Public Administration", emoji: "🏛️" },
-            { label: "Healthcare and Medical", emoji: "🩺" },
-            { label: "Hospitality and Tourism", emoji: "👨‍🍳" },
-            { label: "Legal Services", emoji: "⚖️" },
-            { label: "Manufacturing and Production", emoji: "🏭" },
-            { label: "Marketing and Advertising", emoji: "📢" },
-            { label: "Nonprofit and Social Services", emoji: "❤️" },
-            { label: "Transportation and Logistics", emoji: "🚚" },
-            { label: "Pharmaceuticals and Biotechnology", emoji: "💊" },
-            { label: "Real Estate and Construction", emoji: "🏗️" },
-            { label: "Retail and Consumer Goods", emoji: "🛍️" },
-            { label: "Sports and Recreation", emoji: "⚽" },
-            { label: "Technology and IT", emoji: "💻" },
-            { label: "Telecommunications", emoji: "📡" },
-            { label: "Other", emoji: "❓" },
-        ],
-        isMultiSelect: false,
-    };
-
-    const degreePage: SurveyPage = {
-        question: "What is your Degree Path or Research Focus?",
-        options: [
-            { label: "Aerospace Engineering", emoji: "✈️" },
-            { label: "Agricultural Sciences", emoji: "🌾" },
-            { label: "Fine Arts & Design", emoji: "🎨" },
-            { label: "Automotive Engineering", emoji: "🚗" },
-            { label: "Business & Management", emoji: "💼" },
-            { label: "Education & Teaching", emoji: "📚" },
-            { label: "Energy Science & Engineering", emoji: "⚡" },
-            { label: "Media & Communication Studies", emoji: "🎭" },
-            { label: "Environmental Science & Sustainability", emoji: "🌍" },
-            { label: "Fashion & Textile Studies", emoji: "👗" },
-            { label: "Finance & Economics", emoji: "🏦" },
-            { label: "Political Science & Public Administration", emoji: "🏛️" },
-            { label: "Health Sciences & Medicine", emoji: "🩺" },
-            { label: "Hospitality & Tourism Management", emoji: "👨‍🍳" },
-            { label: "Law & Legal Studies", emoji: "⚖️" },
-            { label: "Industrial & Manufacturing Engineering", emoji: "🏭" },
-            { label: "Marketing & Consumer Behavior", emoji: "📢" },
-            { label: "Social Work & Nonprofit Studies", emoji: "❤️" },
-            { label: "Logistics & Supply Chain Management", emoji: "🚚" },
-            { label: "Pharmaceutical Sciences & Biotechnology", emoji: "💊" },
-            { label: "Urban Planning & Real Estate Development", emoji: "🏗️" },
-            { label: "Retail & Consumer Studies", emoji: "🛍️" },
-            { label: "Sports Management & Kinesiology", emoji: "⚽" },
-            { label: "General Studies", emoji: "🎓" },
-            { label: "Computer Science & Information Technology", emoji: "💻" },
-            { label: "Telecommunications & Networking", emoji: "📡" },
-            { label: "Other", emoji: "❓" },
-        ],
-        isMultiSelect: false,
-    };
-
-
-    const universityPage: SurveyPage = {
-        question: 'Choose your Alma Mater!',
-        options: [
-            { label: 'Brown University', emoji: '🟤' },
-            { label: 'Columbia University', emoji: '🔵' },
-            { label: 'Cornell University', emoji: '🐻' },
-            { label: 'Dartmouth College', emoji: '🌲' },
-            { label: 'Harvard University', emoji: '🟥' },
-            { label: 'Princeton University', emoji: '🐯' },
-            { label: 'University of Pennsylvania', emoji: '🔴' },
-            { label: 'Yale University', emoji: '🐶' },
-        ],
-        isMultiSelect: false,
-    };
-
-    const locationPage: SurveyPage = {
-        question: "Where are you located?",
-        options: [
-            { label: 'Atlanta, GA', emoji: '🍑' },
-            { label: 'Austin, TX', emoji: '🤠' },
-            { label: 'Baltimore, MD', emoji: '🏈' },
-            { label: 'Boston, MA', emoji: '🏀' },
-            { label: 'Charlotte, NC', emoji: '🏁' },
-            { label: 'Chicago, IL', emoji: '🌬️' },
-            { label: 'Columbus, OH', emoji: '🌰' },
-            { label: 'Dallas, TX', emoji: '🌵' },
-            { label: 'Denver, CO', emoji: '🏔️' },
-            { label: 'Detroit, MI', emoji: '🚗' },
-            { label: 'Hanover, NH', emoji: '🎓' },
-            { label: 'Houston, TX', emoji: '🚀' },
-            { label: 'Ithaca, NY', emoji: '🌳' },
-            { label: 'Las Vegas, NV', emoji: '🎰' },
-            { label: 'Los Angeles, CA', emoji: '🌴' },
-            { label: 'Miami, FL', emoji: '🌊' },
-            { label: 'Minneapolis, MN', emoji: '❄️' },
-            { label: 'Nashville, TN', emoji: '🎸' },
-            { label: 'New Haven, CT', emoji: '🦉' },
-            { label: 'New York City, NY', emoji: '🗽' },
-            { label: 'Orlando, FL', emoji: '🎢' },
-            { label: 'Philadelphia, PA', emoji: '🦅' },
-            { label: 'Phoenix, AZ', emoji: '🌵' },
-            { label: 'Pittsburgh, PA', emoji: '🏒' },
-            { label: 'Portland, OR', emoji: '🌲' },
-            { label: 'Princeton, NJ', emoji: '🐯' },
-            { label: 'Providence, RI', emoji: '⚓' },
-            { label: 'Raleigh, NC', emoji: '🏡' },
-            { label: 'San Diego, CA', emoji: '🌞' },
-            { label: 'San Francisco, CA', emoji: '🌉' },
-            { label: 'San Jose, CA', emoji: '🤖' },
-            { label: 'Seattle, WA', emoji: '☔' },
-            { label: 'Tampa, FL', emoji: '🐊' },
-            { label: 'Washington, D.C.', emoji: '🏛️' },
-            { label: 'Accra, Ghana', emoji: '🇬🇭' },
-            { label: 'Addis Ababa, Ethiopia', emoji: '🇪🇹' },
-            { label: 'Amsterdam, Netherlands', emoji: '🇳🇱' },
-            { label: 'Beijing, China', emoji: '🇨🇳' },
-            { label: 'Cairo, Egypt', emoji: '🇪🇬' },
-            { label: 'Casablanca, Morocco', emoji: '🇲🇦' },
-            { label: 'Cape Town, South Africa', emoji: '🇿🇦' },
-            { label: 'Johannesburg, South Africa', emoji: '🇿🇦' },
-            { label: 'Dakar, Senegal', emoji: '🇸🇳' },
-            { label: 'Dubai, UAE', emoji: '🇦🇪' },
-            { label: 'Hong Kong', emoji: '🇭🇰' },
-            { label: 'Kingston, Jamaica', emoji: '🇯🇲' },
-            { label: 'Lagos, Nigeria', emoji: '🇳🇬' },
-            { label: 'London, UK', emoji: '🇬🇧' },
-            { label: 'Paris, France', emoji: '🇫🇷' },
-            { label: 'Seoul, South Korea', emoji: '🇰🇷' },
-            { label: 'Tokyo, Japan', emoji: '🇯🇵' },
-            { label: 'Other', emoji: '❓' },
-        ],
-        isMultiSelect: false,
-    };
-
-    const hobbiesPage: SurveyPage = {
-        question: "What are your hobbies and interests?",
-        options: [
-            { label: 'Creative Writing', description: 'Share your poetry, short stories, and writing projects!', emoji: '📝' },
-            { label: 'Photography & Videography', description: 'Discuss cameras, editing, and share your best shots!', emoji: '📸' },
-            { label: 'Fitness & Wellness', description: 'Talk workouts, nutrition, and self-care routines!', emoji: '🏋️‍♂️' },
-            { label: 'Self-Improvement', description: 'Books, productivity hacks, and leveling up your mindset!', emoji: '📖' },
-            { label: 'Skincare & Beauty', description: 'Share your favorite products, routines, and beauty tips!', emoji: '💄' },
-            { label: 'Fashion & Style', description: 'Talk all things fashion, from streetwear to high-end looks!', emoji: '👗' },
-            { label: 'Tech & Gadgets', description: 'Discuss the latest tech trends, gadgets, and innovations!', emoji: '💻' },
-            { label: 'DIY & Crafting', description: 'Share your DIY projects, crafts, and handmade creations!', emoji: '🎨' },
-            { label: 'Music Lovers', description: 'Talk about your favorite artists, albums, and concerts!', emoji: '🎶' },
-            { label: 'Film & TV Buffs', description: 'Discuss your favorite movies, TV shows, and theories!', emoji: '🎬' },
-            { label: 'Anime & Manga', description: 'Chat about your favorite anime, manga, and recommendations!', emoji: '📖' },
-            { label: 'Gaming', description: 'Talk about your favorite video games, consoles, and strategies!', emoji: '🎮' },
-            { label: 'Sports & Athletics', description: 'From basketball to F1, discuss all things sports!', emoji: '🏀' },
-            { label: 'Outdoor Adventures', description: 'Hiking, camping, and outdoor fun!', emoji: '⛰️' },
-            { label: 'Foodies & Cooking', description: 'Share recipes, food hacks, and favorite meals!', emoji: '🍽️' },
-            { label: 'Travel Enthusiasts', description: 'Discuss dream destinations, travel tips, and adventures!', emoji: '✈️' },
-            { label: 'Mental Health & Wellness', description: 'A space to talk mindfulness, self-care, and well-being!', emoji: '🧘' },
-            { label: 'Finance & Investing', description: 'Talk about budgeting, stocks, and financial goals!', emoji: '💰' },
-            { label: 'Parenting & Family', description: 'Discuss all things parenthood and family life!', emoji: '🍼' },
-            { label: 'Spirituality & Mindfulness', description: 'A space to discuss meditation, manifestation, and more!', emoji: '☯️' },
-            { label: 'Car Enthusiasts', description: 'Talk about car mods, dream cars, and road trips!', emoji: '🚗' },
-            { label: 'Comedy & Memes', description: 'Share jokes, funny memes, and hilarious content!', emoji: '😂' },
-            { label: 'Pets & Animals', description: 'Share pictures, tips, and stories about your pets!', emoji: '🐶' },
-            { label: 'Baddies in Luxury', description: 'A space for luxury lifestyle discussions!', emoji: '💎' },
-            { label: 'Astrology & Tarot', description: 'Discuss zodiac signs, tarot readings, and cosmic vibes!', emoji: '🔮' },
-            { label: 'Board Games & Tabletop RPGs', description: 'From Monopoly to DnD, talk all things tabletop!', emoji: '🎲' },
-            { label: 'Languages & Learning', description: 'Discuss learning new languages and study tips!', emoji: '🌍' },
-            { label: 'Entrepreneurship & Startups', description: 'Talk about business ideas, startups, and side hustles!', emoji: '🚀' },
-            { label: 'Other', description: 'Have an interest that’s not listed? Share it here!', emoji: '❓' },
-        ],
-        isMultiSelect: true,
-    };
-
-    const pages = [
-        ...basePages,
-        ...(statusSelection === "University Affiliate" ? [degreePage] : []),
-        ...(statusSelection === "Industry Professional" ? [industryPage] : []),
-        universityPage,
-        locationPage,
-        hobbiesPage,
-    ];
-
-    const nextPage = () => {
-        if (currentPage < pages.length) {
-            setCurrentPage(currentPage + 1);
-            if (modalContentRef.current) {
-                modalContentRef.current.scrollTop = 0;
-            }
-        }
-    };
-
-    const prevPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    };
-
-    const handleSelectOption = (optionLabel: string) => {
-        const currentPageData = pages[currentPage - 1];
-
-        if (currentPage === 1) {
-            setStatusSelection(optionLabel);
-        }
-
-        if (optionLabel === "Other") {
-            setCustomInput(""); // Clear the input box when "Other" is selected
-        }
-
-        if (currentPageData.isMultiSelect) {
-            setSelectedOptions((prev) => ({
-                ...prev,
-                [currentPage]: {
-                    ...prev[currentPage as number],
-                    [optionLabel]: !prev[currentPage as number]?.[optionLabel],
-                },
-            }));
-        } else {
-            setSelectedOptions({
-                ...selectedOptions,
-                [currentPage]: { [optionLabel]: true },
-            });
-        }
-    };
-
-    const renderOptions = () => {
-        const currentPageOptions = pages[currentPage - 1].options;
+    const renderProgressBar = () => {
+        const progress = (currentPage / pages.length) * 100; // Calculate progress percentage
 
         return (
-            <>
-                {currentPageOptions.map((option, index) => (
+            <div className="mb-4">
+                {/* Page Number */}
+                <p className="text-center text-black font-bold text-lg mb-2">
+                    {currentPage} out of {pages.length}
+                </p>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-4 relative">
                     <div
-                        key={index}
-                        onClick={() => handleSelectOption(option.label)}
-                        className={`flex flex-col items-start p-4 border rounded-lg cursor-pointer w-full min-w-[50px] text-wrap ${selectedOptions[currentPage]?.[option.label] ? "bg-orange-300" : "hover:bg-orange-200"
-                            }`}
-                    >
-                        <div className="flex items-center space-x-4">
-                            <span className="text-2xl">{option.emoji}</span>
-                            <div>
-                                <p className="font-semibold text-lg">{option.label}</p>
-                                {option.description && <p className="text-sm text-white">{option.description}</p>}
+                        style={{ width: `${progress}%` }}
+                        className="bg-red-500 h-full rounded-full"
+                    ></div>
+                </div>
+            </div>
+        );
+    };
+
+    const nextPage = () => currentPage < 5 && setCurrentPage(currentPage + 1);
+    const prevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1);
+
+    const handleHobbySelect = (hobby: string) => {
+        if (hobbies.includes(hobby)) {
+            setHobbies(hobbies.filter((item) => item !== hobby));
+        } else if (hobbies.length < maxHobbies) {
+            setHobbies([...hobbies, hobby]);
+        }
+    };
+
+    const renderPageContent = () => {
+        switch (currentPage) {
+            case 1:
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-black font-bold">Gender:</label>
+                            <select
+                                className="w-full p-2 border rounded-lg"
+                                value={gender}
+                                onChange={(e) => setGender(e.target.value)}
+                            >
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Non-Binary">Non-Binary</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-black font-bold">Date of Birth:</label>
+                            <div className="flex space-x-2">
+                                <select
+                                    className="p-2 border rounded-lg"
+                                    value={dateOfBirth.day}
+                                    onChange={(e) => setDateOfBirth({ ...dateOfBirth, day: e.target.value })}
+                                >
+                                    <option value="">Day</option>
+                                    {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+                                        <option key={day} value={day}>
+                                            {day}
+                                        </option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="p-2 border rounded-lg"
+                                    value={dateOfBirth.month}
+                                    onChange={(e) => setDateOfBirth({ ...dateOfBirth, month: e.target.value })}
+                                >
+                                    <option value="">Month</option>
+                                    {[
+                                        "January",
+                                        "February",
+                                        "March",
+                                        "April",
+                                        "May",
+                                        "June",
+                                        "July",
+                                        "August",
+                                        "September",
+                                        "October",
+                                        "November",
+                                        "December",
+                                    ].map((month, index) => (
+                                        <option key={index} value={month}>
+                                            {month}
+                                        </option>
+                                    ))}
+                                </select>
+                                <select
+                                    className="p-2 border rounded-lg"
+                                    value={dateOfBirth.year}
+                                    onChange={(e) => setDateOfBirth({ ...dateOfBirth, year: e.target.value })}
+                                >
+                                    <option value="">Year</option>
+                                    {Array.from({ length: 100 }, (_, i) => 2025 - i).map((year) => (
+                                        <option key={year} value={year}>
+                                            {year}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                         </div>
                     </div>
-                ))}
-
-                {/* Input box for "Other" */}
-                {selectedOptions[currentPage]?.["Other"] && (
-                    <div className="mt-4">
-                        <label htmlFor="customInput" className="block text-sm font-medium text-gray-300">
-                            Please specify:
-                        </label>
-                        <input
-                            id="customInput"
-                            type="text"
-                            value={customInput}
-                            onChange={(e) => setCustomInput(e.target.value)}
-                            className="p-4 mt-1 block w-full rounded-md border-orange-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm text-black"
-                            placeholder="Type your response here"
-                        />
+                );
+            case 2:
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-black font-bold">Location:</label>
+                            <select
+                                className="w-full p-2 border rounded-lg"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                            >
+                                <option value="">Select Location</option>
+                                <option value="USA">USA</option>
+                                <option value="Canada">Canada</option>
+                                <option value="UK">UK</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-black font-bold">Employer:</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded-lg"
+                                value={employer}
+                                onChange={(e) => setEmployer(e.target.value)}
+                                placeholder="Enter Employer"
+                            />
+                        </div>
                     </div>
-                )}
-            </>
-        );
+                );
+            case 3:
+                return (
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-black font-bold">Undergrad School:</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded-lg"
+                                value={undergradSchool}
+                                onChange={(e) => setUndergradSchool(e.target.value)}
+                                placeholder="Enter Undergrad School"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-black font-bold">Class Year:</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded-lg"
+                                value={classYear}
+                                onChange={(e) => setClassYear(e.target.value)}
+                                placeholder="Enter Class Year"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-black font-bold">Graduate School:</label>
+                            <input
+                                type="text"
+                                className="w-full p-2 border rounded-lg"
+                                value={graduateSchool}
+                                onChange={(e) => setGraduateSchool(e.target.value)}
+                                placeholder="Enter Graduate School"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-black font-bold">Degree Type:</label>
+                            <select
+                                className="w-full p-2 border rounded-lg"
+                                value={degreeType}
+                                onChange={(e) => setDegreeType(e.target.value)}
+                            >
+                                <option value="">Select Degree Type</option>
+                                <option value="Bachelor's">Bachelor's</option>
+                                <option value="Master's">Master's</option>
+                                <option value="PhD">PhD</option>
+                            </select>
+                        </div>
+                    </div>
+                );
+            case 4:
+                return (
+                    <div className="space-y-2">
+                        <label className="block text-black font-bold">
+                            Please select your 5 favorite hobbies/interests:
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                            {["Art & Crafts", "Cooking & Baking", "Fitness & Wellness", "Gaming", "Music"].map(
+                                (hobby) => (
+                                    <button
+                                        key={hobby}
+                                        className={`p-2 rounded-lg border ${hobbies.includes(hobby) ? "bg-red-500 text-white" : "bg-white"
+                                            }`}
+                                        onClick={() => handleHobbySelect(hobby)}
+                                    >
+                                        {hobby}
+                                    </button>
+                                )
+                            )}
+                        </div>
+                    </div>
+                );
+            case 5:
+                return (
+                    <div>
+                        <p className="text-black text-sm">
+                            By submitting this application, I acknowledge and consent to BlackIvy's data policies.
+                        </p>
+                        <Button
+                            className="mt-4 bg-red-500 text-white w-full"
+                            onClick={() => onOpenChange(false)} // Pass 'false' to close the modal
+                        >
+                            I Confirm
+                        </Button>
+                    </div>
+                );
+            default:
+                return null;
+        }
     };
 
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
-            <Dialog.DialogTitle>
-                <Dialog.Content className="fixed inset-0 flex justify-center items-center z-50">
-                    <div
-                        ref={modalContentRef}
-                        className="bg-orange-500 rounded-lg shadow-lg p-6 max-w-3xl w-full overflow-y-auto max-h-[70vh]">
-                        <Card className='bg-[#303338]'>
-                            <CardContent>
-                                <div className="mb-4">
-                                    <p className="text-orange-500 text-sm">
-                                        Question {currentPage} of {pages.length}
-                                    </p>
-                                    <h2 className="text-xl font-bold mb-4">{pages[currentPage - 1].question}</h2>
-                                    {/* Grid layout for options */}
-                                    <div className="grid grid-flow-row sm:grid-flow-col gap-2 lg:grid-flow-row">
-                                        {renderOptions()}
-                                    </div>
-                                </div>
-                                {/* Navigation buttons */}
-                                <div className="flex justify-between mt-6">
-                                    <Button
-                                        disabled={currentPage === 1}
-                                        onClick={prevPage}
-                                        variant="primary"
-                                        className="mr-2 text-white"
-                                    >
-                                        Back
-                                    </Button>
-                                    <Button
-                                        onClick={nextPage}
-                                        disabled={currentPage === pages.length}
-                                        variant="primary"
-                                    >
-                                        {currentPage === pages.length ? 'Finish' : 'Next'}
-                                    </Button>
-                                    <Dialog.Close asChild>
-                                        <Button onClick={() => onOpenChange(false)}>Close</Button>
-                                    </Dialog.Close>
-                                </div>
-                            </CardContent>
-                        </Card>
+            <Dialog.Content className="fixed inset-0 flex justify-center items-center z-50">
+                <div className="relative bg-yellow-300 rounded-lg p-6 shadow-lg max-w-md w-full">
+                    {/* Logo */}
+                    <img
+                        src="/orange B logo.png" // Replace with the actual logo path
+                        alt="BlackIvy Logo"
+                        className="absolute top-[-45px] left-1/2 transform -translate-x-1/2 h-auto w-12"
+                    />
+
+                    {/* Progress Bar */}
+                    {renderProgressBar()}
+
+                    {/* Page Content */}
+                    {renderPageContent()}
+
+                    {/* Navigation Buttons */}
+                    <div className="flex justify-between mt-6">
+                        <Button
+                            disabled={currentPage === 1}
+                            onClick={prevPage}
+                            className="bg-gray-300 text-black px-4 py-2 rounded-lg"
+                        >
+                            Back
+                        </Button>
+                        <Button
+                            onClick={nextPage}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                        >
+                            {currentPage === 5 ? "Finish" : "Next"}
+                        </Button>
                     </div>
-                </Dialog.Content>
-            </Dialog.DialogTitle>
+                </div>
+            </Dialog.Content>
         </Dialog.Root>
     );
 };
