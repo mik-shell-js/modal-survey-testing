@@ -5122,6 +5122,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         alt="BlackIvy Logo"
                         className="absolute top-[-80px] left-1/2 transform -translate-x-1/2 h-auto w-20"
                     />
+                    {/* Border for Logo */}
+                    <div className="transform translate-x-[276px] -translate-y-[110px] h-[55px] w-[55px] border-2 border-black rounded-full overflow-hidden">
+                    </div>
 
                     {/* Progress Bar */}
                     {renderProgressBar()}
