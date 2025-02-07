@@ -19,6 +19,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     const [degreeType, setDegreeType] = useState("");
     const [currentHobbyPage, setCurrentHobbyPage] = useState(1);
     const [hobbies, setHobbies] = useState<string[]>([]);
+    const [isConfirmed, setIsConfirmed] = useState(false); // Track if "I Confirm" is clicked
     const maxHobbies = 5;
     const pages = [1, 2, 3, 4, 5]; // Array to represent the total number of pages
     const schools = [
@@ -3303,7 +3304,11 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         </p>
                         <button
                             className=" ml-40 mt-4 bg-transparent border-2 border-black text-black text-lg w-[50%] mx-auto hover:text-white hover:bg-[#f14421] px-12 py-2 rounded-[5rem]"
-                            onClick={() => onOpenChange(false)} // Pass 'false' to close the modal
+                            onClick={(e) => {
+                                e.currentTarget.className = " ml-40 mt-4 border-2 border-black text-lg w-[50%] mx-auto text-white font-extrabold bg-[#f14421] px-12 py-2 rounded-[5rem]"
+                                setIsConfirmed(true); // Mark as confirmed
+                            }}
+                            
                         >
                             I Confirm
                         </button>
@@ -3343,7 +3348,17 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                             Back
                         </Button>
                         <Button
-                            onClick={nextPage}
+                            onClick={() => {
+                                if (currentPage === 5) {
+                                    if (isConfirmed) {
+                                        onOpenChange(false); // Close modal only if confirmed
+                                    } else {
+                                        alert("Please click 'I Confirm' before finishing.");
+                                    }
+                                } else {
+                                    nextPage(); // Continue to the next page
+                                }
+                            }}
                             className="bg-red-500 text-yellow-300 font-extrabold text-md px-12 py-2 rounded-[5rem]"
                         >
                             {currentPage === 5 ? "Finish" : "Next"}
