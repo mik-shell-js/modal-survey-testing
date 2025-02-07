@@ -19,3 +19,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.select-dropdown {
+  appearance: none;
+  background-color: white;
+  background-image: url("/arrow-drop-down-big-svgrepo-com.svg");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 1rem) center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem; /* Add space for the arrow */
+}

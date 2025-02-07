@@ -15,10 +15,10 @@ export const Button: React.FC<ButtonProps> = ({
     disabled = false,
     className = '',
 }) => {
-    const baseStyles = 'px-4 py-2 rounded-lg text-center transition-all duration-200';
+    const baseStyles = 'px-4 py-2 rounded-[5rem] py- border-2 border-black px-16 text-center transition-all duration-200';
     const variants: Record<'primary' | 'outline', string> = {
-        primary: 'bg-blue-500 text-white hover:bg-blue-600',
-        outline: 'border border-white text-white hover:bg-gray-100',
+        primary: 'bg-[#f14421] text-white hover:bg-blue-600',
+        outline: 'border border-black text-white hover:bg-gray-100',
     };
 
     return (
