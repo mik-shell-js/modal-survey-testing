@@ -5115,7 +5115,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
             <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
             <Dialog.Content className="fixed inset-0 flex justify-center items-center z-50">
                 <Dialog.Title className="sr-only">BlackIvy User Survey</Dialog.Title>
-                <div className="relative bg-yellow-300 rounded-lg p-20 shadow-lg max-w-3xl w-full">
+                <div className="relative bg-white rounded-lg p-20 shadow-lg max-w-3xl w-full">
                     {/* Logo */}
                     <img
                         src="/orange B logo.png" // Replace with the actual logo path
@@ -5123,7 +5123,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         className="absolute top-[-80px] left-1/2 transform -translate-x-1/2 h-auto w-20"
                     />
                     {/* Border for Logo */}
-                    <div className="transform translate-x-[276px] -translate-y-[110px] h-[55px] w-[55px] border-2 border-black rounded-full overflow-hidden">
+                    <div className="transform translate-x-[276px] -translate-y-[110px] h-[55px] w-[55px] border-4 border-white rounded-full overflow-hidden">
                     </div>
 
                     {/* Progress Bar */}
