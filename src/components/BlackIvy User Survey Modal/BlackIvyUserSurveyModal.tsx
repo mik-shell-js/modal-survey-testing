@@ -4769,21 +4769,30 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     const itemsPerPage = 10; // Adjust based on your design
 
     const renderProgressBar = () => {
-        const progress = (currentPage / pages.length) * 100; // Calculate progress percentage
-
+        const totalSteps = pages.length;
+        const currentStep = currentPage;
+    
         return (
-            <div className="mb-4">
-                {/* Page Number */}
-                <p className="text-center text-black font-bold text-lg mb-2">
-                    {currentPage} out of {pages.length}
-                </p>
-
-                {/* Progress Bar */}
-                <div className="w-full border-2 border-black bg-white rounded-full h-6 relative">
-                    <div
-                        style={{ width: `${progress}%` }}
-                        className="bg-[#f14421] h-full rounded-full"
-                    ></div>
+            <div className="mb-4 -mt-10 flex flex-col items-center">
+                <div className="flex items-center justify-center">
+                    <div className="flex">
+                        {Array.from({ length: totalSteps }, (_, index) => (
+                            <React.Fragment key={index}>
+                                <div
+                                    className={`w-6 h-6 rounded-full border-2 ${
+                                        index < currentStep ? "bg-[#f14421] border-[#f14421]" : "bg-gray-300 border-gray-400"
+                                    }`}
+                                ></div>
+                                {index < totalSteps - 1 && (
+                                    <div
+                                        className={`w-8 h-1 mt-[10px] ${
+                                            index < currentStep - 1 ? "bg-[#f14421]" : "bg-gray-300"
+                                        }`}
+                                    ></div>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
@@ -4805,15 +4814,15 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
         switch (currentPage) {
             case 1:
                 return (
-                    <div className="space-y-4">
-                        <div className="flex items-center space-x-4">
+                    <div className="space-y-14">
+                        <div className="flex items-center space-x-2">
                             <label className="text-black font-medium">Gender:</label>
                             <select
-                                className="w-full p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black font-[2px] select-dropdown"
                                 value={gender}
                                 onChange={(e) => setGender(e.target.value)}
                             >
-                                <option value="">Select Gender</option>
+                                <option value=""></option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Non-Binary">Non-Binary</option>
@@ -4825,7 +4834,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                             <label className="text-black font-medium">Date of Birth:</label>
                             <div className="flex space-x-2">
                                 <select
-                                    className="p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                    className=" w-4 h-[25px] p-2 border-[1px] mt-[4px] -ml-2 border-black rounded-md text-black select-dropdown"
                                     value={dateOfBirth.day}
                                     onChange={(e) => setDateOfBirth({ ...dateOfBirth, day: e.target.value })}
                                 >
@@ -4836,9 +4845,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                         </option>
                                     ))}
                                 </select>
-                                <span className="text-[#f14421] font-bold text-4xl">/</span>
+                                <span className="text-[#f14421] font-bold text-2xl mt-1">/</span>
                                 <select
-                                    className="p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                    className="w-6 h-[25px] p-2 border-[1px] mt-[4px] -ml-2 border-black rounded-md text-black select-dropdown"
                                     value={dateOfBirth.month}
                                     onChange={(e) => setDateOfBirth({ ...dateOfBirth, month: e.target.value })}
                                 >
@@ -4862,9 +4871,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                         </option>
                                     ))}
                                 </select>
-                                <span className="text-[#f14421] font-bold text-4xl">/</span>
+                                <span className="text-[#f14421] font-bold text-2xl mt-1">/</span>
                                 <select
-                                    className="p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                    className=" w-4 h-[25px] p-2 border-[1px] mt-[4px] -ml-2 border-black rounded-md text-black select-dropdown"
                                     value={dateOfBirth.year}
                                     onChange={(e) => setDateOfBirth({ ...dateOfBirth, year: e.target.value })}
                                 >
@@ -4881,16 +4890,16 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                 );
             case 2:
                 return (
-                    <div className="space-y-4">
+                    <div className="space-y-12">
 
                         <div className="flex items-center space-x-4">
                             <label className="block text-black font-medium">Location:</label>
                             <select
-                                className="w-full p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
                                 value={location}
                                 onChange={(e) => setLocation(e.target.value)}
                             >
-                                <option value="">Select Location</option>
+                                <option value=""></option>
                                 {locations.map((locationOption, index) => (
                                     <option key={index} value={locationOption}>
                                         {locationOption === "Other" ? "Other (Please Specify)" : locationOption}
@@ -4898,14 +4907,14 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                 ))}
                             </select>
                         </div>
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-3">
                             <label className="block text-black font-medium">Employer:</label>
                             <select
-                                className="w-full p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
                                 value={employer}
                                 onChange={(e) => setEmployer(e.target.value)}
                             >
-                                <option value="">Select Employer</option>
+                                <option value=""></option>
                                 {employers.map((employerOption, index) => (
                                     <option key={index} value={employerOption}>
                                         {employerOption}
@@ -4917,7 +4926,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                 );
             case 3:
                 return (
-                    <div className="space-y-4">
+                    <div className="space-y-6">
                         <div className="flex items-center space-x-4">
                             <label className="text-black font-medium">Undergrad School:</label>
                             <select
@@ -5127,13 +5136,16 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                     </div>
 
                     {/* Progress Bar */}
+                    <div className="-mt-[90px]">
                     {renderProgressBar()}
+                    </div>
 
+                    <div className="mt-20">
                     {/* Page Content */}
                     {renderPageContent()}
-
+                    </div>
                     {/* Navigation Buttons */}
-                    <div className="flex justify-between mt-6">
+                    <div className="flex justify-between mt-48">
                         <Button
                             disabled={currentPage === 1}
                             onClick={prevPage}
