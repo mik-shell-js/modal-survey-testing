@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { Button } from "../ui/Button/button";
+// import { Button } from "../ui/Button/button";
 
 interface BlackIvyUserSurveyModalProps {
     open: boolean;
@@ -5124,7 +5124,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
             <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 z-50" />
             <Dialog.Content className="fixed inset-0 flex justify-center items-center z-50">
                 <Dialog.Title className="sr-only">BlackIvy User Survey</Dialog.Title>
-                <div className="relative bg-white rounded-lg p-20 shadow-lg max-w-3xl w-full">
+                <div className="relative bg-white rounded-2xl p-20 shadow-lg max-w-3xl w-[35%]">
                     {/* Logo */}
                     <img
                         src="/orange B logo.png" // Replace with the actual logo path
@@ -5132,7 +5132,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         className="absolute top-[-80px] left-1/2 transform -translate-x-1/2 h-auto w-20"
                     />
                     {/* Border for Logo */}
-                    <div className="transform translate-x-[276px] -translate-y-[110px] h-[55px] w-[55px] border-4 border-white rounded-full overflow-hidden">
+                    <div className="transform translate-x-[150px] -translate-y-[111px] h-[55px] w-[55px] border-4 border-white rounded-full overflow-hidden">
                     </div>
 
                     {/* Progress Bar */}
@@ -5145,15 +5145,15 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                     {renderPageContent()}
                     </div>
                     {/* Navigation Buttons */}
-                    <div className="flex justify-between mt-48">
-                        <Button
+                    <div className="flex justify-between mt-48 flex-col-reverse gap-6">
+                        <button
                             disabled={currentPage === 1}
                             onClick={prevPage}
-                            className="bg-[red-500] text-yellow-300 font-extrabold text-md px-12 py-2 rounded-[5rem]"
+                            className=" text-black font-extrabold underline text-md px-2 py-2 rounded-[5rem] w-[50%] mx-20 border-none"
                         >
                             Back
-                        </Button>
-                        <Button
+                        </button>
+                        <button
                             onClick={() => {
                                 if (currentPage === 5) {
                                     if (isConfirmed) {
@@ -5165,10 +5165,10 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                     nextPage(); // Continue to the next page
                                 }
                             }}
-                            className="bg-red-500 text-yellow-300 font-extrabold text-md px-12 py-2 rounded-[5rem]"
+                            className="bg-red-500 text-white text-md px-2 py-2 rounded-[5rem] w-[50%] mx-20 shadow-lg"
                         >
                             {currentPage === 5 ? "Finish" : "Next"}
-                        </Button>
+                        </button>
                     </div>
                 </div>
             </Dialog.Content>
