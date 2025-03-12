@@ -18,10 +18,11 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     const [gradClassYear, setGradClassYear] = useState("");
     const [graduateSchool, setGraduateSchool] = useState("");
     const [degreeType, setDegreeType] = useState("");
-    const [answerType, setAnswerType] = useState("");
+    const [isGradSchool, setIsGradSchool] = useState(false);
     const [currentHobbyPage, setCurrentHobbyPage] = useState(1);
     const [hobbies, setHobbies] = useState<string[]>([]);
     const [isConfirmed, setIsConfirmed] = useState(false); // Track if "I Confirm" is clicked
+    const [errorMessage, setErrorMessage] = useState(""); // Error message to display if user tries to submit without completing all fields
     const [selectedOther, setSelectedOther] = useState(false);
     const [customInput, setCustomInput] = useState("");
     const maxHobbies = 5;
@@ -4771,7 +4772,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     const renderProgressBar = () => {
         const totalSteps = pages.length;
         const currentStep = currentPage;
-    
+
         return (
             <div className="mb-4 -mt-10 flex flex-col items-center">
                 <div className="flex items-center justify-center">
@@ -4779,15 +4780,13 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         {Array.from({ length: totalSteps }, (_, index) => (
                             <React.Fragment key={index}>
                                 <div
-                                    className={`w-6 h-6 rounded-full border-2 ${
-                                        index < currentStep ? "bg-[#f14421] border-[#f14421]" : "bg-gray-300 border-gray-400"
-                                    }`}
+                                    className={`w-6 h-6 rounded-full border-2 ${index < currentStep ? "bg-[#f14421] border-[#f14421]" : "bg-gray-300 border-gray-400"
+                                        }`}
                                 ></div>
                                 {index < totalSteps - 1 && (
                                     <div
-                                        className={`w-8 h-1 mt-[10px] ${
-                                            index < currentStep - 1 ? "bg-[#f14421]" : "bg-gray-300"
-                                        }`}
+                                        className={`w-8 h-1 mt-[10px] ${index < currentStep - 1 ? "bg-[#f14421]" : "bg-gray-300"
+                                            }`}
                                     ></div>
                                 )}
                             </React.Fragment>
@@ -4926,15 +4925,15 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                 );
             case 3:
                 return (
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                         <div className="flex items-center space-x-4">
-                            <label className="text-black font-medium">Undergrad School:</label>
+                            <label className="block text-black font-medium">Undergrad School:</label>
                             <select
-                                className="w-[70%] p-2 border-2 border-black rounded-3xl select-dropdown text-black"
+                                className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
                                 value={undergradSchool}
                                 onChange={(e) => setUndergradSchool(e.target.value)}
                             >
-                                <option value="">Select Undergraduate Institution</option>
+                                <option value=""></option>
                                 {undergradSchools.map((school, index) => (
                                     <option key={index} value={school}>
                                         {school}
@@ -4945,11 +4944,11 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         <div className="flex items-center space-x-4">
                             <label className="text-black font-medium">Class Year:</label>
                             <select
-                                className="w-[20%] p-2 border-2 border-black rounded-3xl text-black select-dropdown"
+                                className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
                                 value={classYear}
                                 onChange={(e) => setClassYear(e.target.value)}
                             >
-                                <option value="">Year</option>
+                                <option value=""></option>
                                 {Array.from({ length: 100 }, (_, i) => 2032 - i).map((year) => (
                                     <option key={year} value={year}>
                                         {year}
@@ -4958,59 +4957,62 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                             </select>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <label className="block text-black font-medium">I currently attend or have been admitted into Graduate School:</label>
-                            <select
-                                className="w-[50%] p-2 border-2 border-black rounded-3xl text-black select-dropdown"
-                                value={answerType}
-                                onChange={(e) => setAnswerType(e.target.value)}
-                            >
-                                <option value="">Choose Yes or No</option>
-                                <option value="Yes">Yes</option>
-                                <option value="No">No</option>
-                            </select>
+                            <input
+                                type="checkbox"
+                                className="w-4 h-4"
+                                checked={isGradSchool}
+                                onChange={(e) => setIsGradSchool(e.target.checked)}
+                            />
+                            <label className="block text-black font-medium">
+                                I currently attend or have been admitted into a graduate school
+                            </label>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <label className="block text-black font-medium">Graduate School:</label>
-                            <select
-                                className="w-[70%] p-2 border-2 border-black rounded-3xl select-dropdown text-black"
-                                value={graduateSchool}
-                                onChange={(e) => setGraduateSchool(e.target.value)}
-                            >
-                                <option value="">Select Graduate Institution</option>
-                                {gradSchools.map((school, index) => (
-                                    <option key={index} value={school}>
-                                        {school}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <label className="text-black font-medium">Class Year:</label>
-                            <select
-                                className="w-[20%] p-2 border-2 border-black rounded-3xl text-black select-dropdown"
-                                value={gradClassYear}
-                                onChange={(e) => setGradClassYear(e.target.value)}
-                            >
-                                <option value="">Year</option>
-                                {Array.from({ length: 100 }, (_, i) => 2032 - i).map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <label className="block text-black font-medium">Degree Type:</label>
-                            <select
-                                className="w-[78%] p-2 border-2 border-black rounded-3xl text-black select-dropdown"
-                                value={degreeType}
-                                onChange={(e) => setDegreeType(e.target.value)}
-                            >
-                                <option value="">Select Degree Type</option>
-                                <option value="Master's">Master's</option>
-                                <option value="PhD">PhD</option>
-                            </select>
-                        </div>
+                        {isGradSchool && (
+                            <>
+                                <div className="flex items-center space-x-4">
+                                    <label className="block text-black font-medium">Graduate School:</label>
+                                    <select
+                                        className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
+                                        value={graduateSchool}
+                                        onChange={(e) => setGraduateSchool(e.target.value)}
+                                    >
+                                        <option value=""></option>
+                                        {gradSchools.map((school, index) => (
+                                            <option key={index} value={school}>
+                                                {school}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <label className="text-black font-medium">Class Year:</label>
+                                    <select
+                                        className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
+                                        value={gradClassYear}
+                                        onChange={(e) => setGradClassYear(e.target.value)}
+                                    >
+                                        <option value=""></option>
+                                        {Array.from({ length: 100 }, (_, i) => 2032 - i).map((year) => (
+                                            <option key={year} value={year}>
+                                                {year}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <label className="block text-black font-medium">Degree Type:</label>
+                                    <select
+                                        className="w-[155px] h-[25px] p-2 border-[1px] border-black rounded-md text-black select-dropdown"
+                                        value={degreeType}
+                                        onChange={(e) => setDegreeType(e.target.value)}
+                                    >
+                                        <option value=""></option>
+                                        <option value="Master's">Master's</option>
+                                        <option value="PhD">PhD</option>
+                                    </select>
+                                </div>
+                            </>
+                        )}
                     </div>
                 );
             case 4:
@@ -5027,9 +5029,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                 .map((hobby) => (
                                     <button
                                         key={hobby}
-                                        className={`px-1 py-2 rounded-full border text-center text-black border-black font-medium text-sm ${hobbies.includes(hobby)
-                                            ? "bg-[#f14421] text-white font-extrabold"
-                                            : "bg-transparent hover:bg-[#f14421]"
+                                        className={`px-3 py-2 rounded-[26px] border text-center text-black border-black font-medium text-sm ${hobbies.includes(hobby)
+                                            ? "bg-[#094333] text-white"
+                                            : "bg-transparent hover:bg-[#094333] hover:text-white"
                                             }`}
                                         onClick={() => {
                                             if (hobby === "Other ➕❓") {
@@ -5102,16 +5104,28 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                             my information in accordance with applicable privacy laws and will not share it with external parties without my explicit
                             consent unless required by law.
                         </p>
-                        <button
-                            className=" mt-4 bg-transparent border-2 border-black text-black text-lg w-[50%] mx-40 hover:text-white hover:bg-[#f14421] px-12 py-2 rounded-[5rem]"
-                            onClick={(e) => {
-                                e.currentTarget.className = "mt-4 border-2 border-black text-lg w-[50%] mx-40 text-white font-extrabold bg-[#f14421] px-12 py-2 rounded-[5rem]"
-                                setIsConfirmed(true); // Mark as confirmed
-                            }}
-
-                        >
-                            I Confirm
-                        </button>
+                        <div className="flex items-center space-x-4">
+                            <input
+                                type="checkbox"
+                                className="w-4 h-4"
+                                checked={isConfirmed}
+                                onChange={(e) => {
+                                    setIsConfirmed(e.target.checked);
+                                    if (e.target.checked) {
+                                        setErrorMessage(""); // Clear error message on check
+                                    }
+                                }}
+                            />
+                            <label className="text-black font-medium">
+                                I Confirm
+                            </label>
+                        </div>
+                        {/* Error Message */}
+                        {errorMessage && (
+                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-md mt-3 text-sm">
+                                {errorMessage}
+                            </div>
+                        )}
                     </div>
                 );
             default:
@@ -5137,15 +5151,15 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
 
                     {/* Progress Bar */}
                     <div className="-mt-[90px]">
-                    {renderProgressBar()}
+                        {renderProgressBar()}
                     </div>
 
-                    <div className="mt-20">
-                    {/* Page Content */}
-                    {renderPageContent()}
+                    <div className="mt-10">
+                        {/* Page Content */}
+                        {renderPageContent()}
                     </div>
                     {/* Navigation Buttons */}
-                    <div className="flex justify-between mt-48 flex-col-reverse gap-6">
+                    <div className="flex justify-between mt-4 flex-col-reverse gap-2">
                         <button
                             disabled={currentPage === 1}
                             onClick={prevPage}
@@ -5159,7 +5173,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                     if (isConfirmed) {
                                         onOpenChange(false); // Close modal only if confirmed
                                     } else {
-                                        alert("Please click 'I Confirm' before finishing.");
+                                        setErrorMessage("Please confirm the data use confirmation to continue.");
                                     }
                                 } else {
                                     nextPage(); // Continue to the next page
