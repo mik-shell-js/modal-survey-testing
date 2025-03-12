@@ -4736,36 +4736,36 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     ];
 
     const hobbyOptions = [
-        "Art & Crafts 🎨🖌️",
-        "Brunch & Foodie Meetups 🍽️🥂",
-        "Book Club 📚☕",
-        "Community Service ❤️🤲",
-        "Cooking & Baking 🍳🧁",
-        "Entrepreneurship Think Tanks 💼📊",
-        "Fashion & Styling 👗👔",
-        "Financial Literacy & Investing Groups 💰📈",
-        "Fitness & Workout Groups 🏋🏾‍♂️🧘‍♀️",
-        "Game Nights 🎲♟️",
-        "Going Out 🤝🍸",
-        "Movie Nights & Film Chats 🎬🍿",
-        "Music & Live Concerts 🎶🎤",
-        "Outdoor Adventures ⛰️🚣‍♀️🏕️",
-        "Photography & Content Creation 📷📸",
-        "Podcasting & Media Chats 🎙️🎧",
-        "Poetry & Open Mic Nights 📝🎙️",
-        "Spiritual & Wellness Retreats 🕊️🕯️",
-        "Sports Leagues 🏀⚽🏈",
-        "Tech 💻🤖",
-        "Travel & Group Trips ✈️🏝️",
-        "Wine Tastings 🍷🍺",
-        "Video Gaming 🎮🕹️",
-        "Yoga & Meditation 🧘‍♂️🧘‍♀️",
-        "Board Games & Puzzles ♟️🧩",
-        "Stand-Up Comedy & Improv 🎭😂",
-        "DIY & Home Improvement 🔨🏡",
-        "Language Learning 🌍🗣️",
-        "Collecting (Sneakers, Comics, etc.) 👟📖",
-        "Other ➕❓",
+        "Art & Crafts",
+        "Brunch & Foodie Meetups",
+        "Book Club",
+        "Community Service",
+        "Cooking & Baking",
+        "Entrepreneurship Think Tanks",
+        "Fashion & Styling",
+        "Financial Literacy & Investing Groups",
+        "Fitness & Workout Groups",
+        "Game Nights",
+        "Going Out",
+        "Movie Nights & Film Chats",
+        "Music & Live Concerts",
+        "Outdoor Adventures",
+        "Photography & Content Creation",
+        "Podcasting & Media Chats",
+        "Poetry & Open Mic Nights",
+        "Spiritual & Wellness Retreats",
+        "Sports Leagues",
+        "Tech",
+        "Travel & Group Trips",
+        "Wine Tastings",
+        "Video Gaming",
+        "Yoga & Meditation",
+        "Board Games & Puzzles",
+        "Stand-Up Comedy & Improv",
+        "DIY & Home Improvement",
+        "Language Learning",
+        "Collecting (Sneakers, Comics, etc.)",
+        "Other",
     ];
     const itemsPerPage = 10; // Adjust based on your design
 
@@ -5023,7 +5023,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         </label>
 
                         {/* Render Hobbies */}
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-3 whitespace-nowrap">
                             {hobbyOptions
                                 .slice((currentHobbyPage - 1) * itemsPerPage, currentHobbyPage * itemsPerPage)
                                 .map((hobby) => (
@@ -5034,7 +5034,7 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                             : "bg-transparent hover:bg-[#094333] hover:text-white"
                                             }`}
                                         onClick={() => {
-                                            if (hobby === "Other ➕❓") {
+                                            if (hobby === "Other") {
                                                 if (selectedOther) {
                                                     setSelectedOther(false);
                                                     setCustomInput(""); // Clear input when deselecting "Other"
@@ -5048,9 +5048,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                             }
                                         }}
                                     >
-                                        {hobby === "Other ➕❓" ? (
+                                        {hobby === "Other" ? (
                                             <>
-                                                Other ➕❓
+                                                Other
                                                 {selectedOther && (
                                                     <input
                                                         type="text"
@@ -5070,19 +5070,19 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                         </div>
 
                         {/* Render Pagination */}
-                        <div className="flex justify-end space-x-[-10px] my-2">
+                        <div className="flex justify-end space-x-[-21px] my-2">
                             <div className="text-black text-sm font-bold mt-3 mr-4">
                                 {currentHobbyPage} of {Math.ceil(hobbyOptions.length / itemsPerPage)}
                             </div>
                             <button
-                                className="p-2 bg-transparent rounded-full text-[#f14421] hover:text-blue-600 text-2xl"
+                                className="p-2 bg-transparent rounded-full text-[#f14421] hover:text-blue-600 text-xl"
                                 disabled={currentHobbyPage === 1}
                                 onClick={() => setCurrentHobbyPage(currentHobbyPage - 1)}
                             >
                                 ◀
                             </button>
                             <button
-                                className="p-2 bg-transparent rounded-full text-[#f14421] hover:text-blue-600 text-2xl"
+                                className="p-2 bg-transparent rounded-full text-[#f14421] hover:text-blue-600 text-xl"
                                 disabled={currentHobbyPage === Math.ceil(hobbyOptions.length / itemsPerPage)}
                                 onClick={() => setCurrentHobbyPage(currentHobbyPage + 1)}
                             >
