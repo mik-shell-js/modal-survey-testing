@@ -27,6 +27,22 @@ body {
   background-repeat: no-repeat;
   background-position: calc(100% - 0.05rem) center;
   background-size: 1.25rem;
-  padding-left: 4.5rem;
+  margin-left: auto;
   padding-right: 0;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Add margin when scrolling to an element */
+[data-hobby] {
+  scroll-margin-top: 2rem; /* Adjust as needed */
 }
