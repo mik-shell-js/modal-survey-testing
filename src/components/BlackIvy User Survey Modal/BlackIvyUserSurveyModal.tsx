@@ -73,10 +73,10 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
             const firstNonPrioritizedElement = hobbyListRef.current.querySelector(
                 `[data-hobby="${CSS.escape(remainingHobbies[0])}"]`
             );
-    
+
             if (firstNonPrioritizedElement) {
                 console.log("Scrolling to:", remainingHobbies[0]); // find hobby in array before start
-    
+
                 firstNonPrioritizedElement.scrollIntoView({
                     behavior: "smooth",
                     block: "start",
@@ -96,6 +96,18 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
         }));
     };
 
+    // const [searchQuery, setSearchQuery] = useState<{ [key: string]: string }>({});
+
+    // const handleSearchChange = (field: string, value: string) => {
+    //     setSearchQuery((prev) => ({ ...prev, [field]: value }));
+    // };
+
+    // const filteredOptions = (options: string[], field: string) => {
+    //     return options.filter((option) =>
+    //         option.toLowerCase().includes((searchQuery[field] || "").toLowerCase())
+    //     );
+    // };
+
     // const [gender, setGender] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState({ day: "", month: "", year: "" });
     // const [location, setLocation] = useState("");
@@ -113,6 +125,12 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
     const [customInput, setCustomInput] = useState("");
     const maxHobbies = 5;
     const pages = [1, 2, 3, 4, 5]; // Array to represent the total number of pages
+
+    // const [dropdownOpen, setDropdownOpen] = useState<{ [key: string]: boolean }>({});
+
+    // const updateDropdownOpen = (field: string, isOpen: boolean) => {
+    //     setDropdownOpen((prev) => ({ ...prev, [field]: isOpen }));
+    // };
 
     const prioritizedHobbies = [
         "Arts & Crafts",
@@ -281,6 +299,9 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                             {/* Employer Dropdown */}
                             <label className="block text-black font-medium">Employer:</label>
                             <select
+                                ref={(el) => {
+                                    selectRefs.current.employer = el;
+                                }}
                                 className="h-[25px] p-1 border-[1px] border-black rounded-md text-sm/[15px] text-left text-black select-dropdown"
                                 value={formData.employer}
                                 onChange={(e) => handleSelectChange("employer", e.target.value)}
@@ -436,46 +457,43 @@ const BlackIvyUserSurveyModal: React.FC<BlackIvyUserSurveyModalProps> = ({ open,
                                     <button
                                         data-hobby={hobby}
                                         className={`px-5 py-2 rounded-[17px] border-2 text-center text-black border-black font-medium text-sm transition-all duration-200
-                                            ${hobbies.includes(hobby)
+                    ${hobbies.includes(hobby)
                                                 ? "bg-[#094333] text-white"
                                                 : "bg-transparent hover:bg-[#094333] hover:text-white"
                                             }`}
-                                        onClick={() => {
-                                            handleHobbySelect(hobby);
+                                        onClick={(e) => {
+                                            if (hobby === "Other") {
+                                                // Prevent closing input when clicking inside it
+                                                e.preventDefault();
+                                                if (!selectedOther) {
+                                                    setSelectedOther(true);
+                                                    handleHobbySelect(hobby);
+                                                }
+                                            } else {
+                                                handleHobbySelect(hobby);
+                                            }
 
                                             // If the third selection happens, scroll to first non-prioritized hobby
                                             if (hobbies.length === 2) {
                                                 setTimeout(scrollToNextSet, 300);
                                             }
-
-                                            if (hobby === "Other") {
-                                                if (selectedOther) {
-                                                    setSelectedOther(false);
-                                                    setCustomInput(""); // Clear input when deselecting "Other"
-                                                    handleHobbySelect(hobby); // Remove from selection
-                                                } else {
-                                                    setSelectedOther(true);
-                                                    handleHobbySelect(hobby); // Keep "Other" highlighted
-                                                }
-                                            } else {
-                                                handleHobbySelect(hobby);
-                                            }
                                         }}
                                     >
                                         {hobby === "Other" ? (
-                                            <>
+                                            <div className="flex items-center gap-4 justify-start">
                                                 Other
                                                 {selectedOther && (
                                                     <input
                                                         type="text"
-                                                        className="mt-2 border rounded-full p-1 text-black w-1/2"
+                                                        className="mt-2 border-2 rounded-full p-1 text-black w-3/4"
                                                         placeholder="Enter your hobby"
                                                         value={customInput}
-                                                        onClick={(e) => e.stopPropagation()}
+                                                        onClick={(e) => e.stopPropagation()} // Prevents closing on click
+                                                        onKeyDown={(e) => e.stopPropagation()} // Prevents closing when typing space
                                                         onChange={(e) => setCustomInput(e.target.value)}
                                                     />
                                                 )}
-                                            </>
+                                            </div>
                                         ) : (
                                             hobby
                                         )}
